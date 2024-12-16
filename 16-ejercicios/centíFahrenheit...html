@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Temperatura</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
+        <h1 class="text-2xl font-bold text-gray-700 text-center mb-4">Conversor </h1>
+        <form id="converterForm" class="space-y-4">
+            <div>
+                <label for="celsius" class="block text-sm font-medium text-gray-700">Grados Centigrados:</label>
+                <input type="number" id="celsius" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Ingrese grados centígrados">
+            </div>
+            <div>
+                <label for="fahrenheit" class="block text-sm font-medium text-gray-700">Grados Fahrenheit:</label>
+                <input type="number" id="fahrenheit" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Ingrese grados Fahrenheit">
+            </div>
+            <div class="flex justify-between">
+                <button type="button" id="toFahrenheit" class="bg-blue-500 text-white px-4 py-2 rounded-md shadow hover:bg-blue-600">Convertir a fahrenheit</button>
+                <button type="button" id="toCelsius" class="bg-green-500 text-white px-4 py-2 rounded-md shadow hover:bg-green-600">Convertir a centigrados</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('toFahrenheit').addEventListener('click', () => {
+            const celsius = Number(document.getElementById('celsius').value);
+            if (!isNaN(celsius)) {
+                const fahrenheit = (celsius * 9/5) + 32;
+                document.getElementById('fahrenheit').value = fahrenheit.toFixed(2);
+            } else {
+                alert('ingrese un valor válido en grados centígrados.');
+            }
+        });
+
+        document.getElementById('toCelsius').addEventListener('click', () => {
+            const fahrenheit = Number(document.getElementById('fahrenheit').value);
+            if (!isNaN(fahrenheit)) {
+                const celsius = (fahrenheit - 32) * 5/9;
+                document.getElementById('celsius').value = celsius.toFixed(2);
+            } else {
+                alert('ingrese un valor válido en grados Fahrenheit');
+            }
+        });
+    </script>
+</body>
+</html>

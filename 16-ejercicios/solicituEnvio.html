@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de pedido</title>
+    <!-- Incluyendo Tailwind CSS desde el CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 p-6">
+    <div class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md">
+        <form id="orderForm">
+            <div class="mb-4">
+                <label for="clientName" class="block text-gray-700 font-semibold">Nombre del cliente:</label>
+                <input type="text" id="clientName" name="clientName" class="w-full px-4 py-2 border rounded-md mt-2">
+            </div>
+
+            <div class="mb-4">
+                <label for="boxMaterial" class="block text-gray-700 font-semibold">Material de la caja:</label>
+                <select id="boxMaterial" name="boxMaterial" class="w-full px-4 py-2 border rounded-md mt-2">
+                    <option value="Cartón">Cartón</option>
+                    <option value="Plástico">Plástico</option>
+                    <option value="Madera">Madera</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 font-semibold">Seleccione unas dimensiones para la caja:</label>
+                <div class="flex items-center space-x-4 mt-2">
+                    <label class="flex items-center space-x-2">
+                        <input type="radio" id="small" name="boxSize" value="Diminutas" class="text-blue-600">
+                        <span>Diminutas</span>
+                    </label>
+                    <label class="flex items-center space-x-2">
+                        <input type="radio" id="medium" name="boxSize" value="Medianas" checked class="text-blue-600">
+                        <span>Medianas</span>
+                    </label>
+                    <label class="flex items-center space-x-2">
+                        <input type="radio" id="large" name="boxSize" value="Grandes" class="text-blue-600">
+                        <span>Grandes</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label for="comments" class="block text-gray-700 font-semibold">Comentarios:</label>
+                <textarea id="comments" name="comments" rows="4" cols="50" class="w-full px-4 py-2 border rounded-md mt-2"></textarea>
+            </div>
+
+            <div class="mt-4 flex justify-center">
+                <button type="button" id="submitBtn" class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300">
+                    Enviar
+                </button>
+            </div>
+        </form>
+
+        <p id="output" class="mt-6 text-center text-gray-800 font-semibold"></p>
+    </div>
+
+    <script>
+        document.getElementById('submitBtn').addEventListener('click', () => {
+            // Capturar los valores del formulario
+            const clientName = document.getElementById('clientName').value;
+            const boxMaterial = document.getElementById('boxMaterial').value;
+            const boxSize = document.querySelector('input[name="boxSize"]:checked').value;
+            const comments = document.getElementById('comments').value;
+
+            // Crear el mensaje de salida
+            const outputMessage = `${clientName} ha pedido una caja de ${boxMaterial.toLowerCase()} con unas dimensiones ${boxSize.toLowerCase()}. ${comments}`;
+
+            // Mostrar el mensaje en el párrafo
+            document.getElementById('output').textContent = outputMessage;
+
+            // Resetear el formulario
+            const form = document.getElementById("orderForm");
+            form.reset();
+        });
+    </script>
+</body>
+
+</html>

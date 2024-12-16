@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Gestor de Usuarios</title>
+</head>
+
+<body class="bg-gray-100 p-6">
+
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-2xl font-bold mb-4 text-center">Gestor de Usuarios con API</h1>
+        <div id="temporizador" class="mb-4 text-blue-500 font-semibold text-center"></div>
+        <section class="mb-6">
+            <h2 class="text-lg font-bold mb-2">Usuarios Disponibles</h2>
+            <ul id="usuariosDisponibles" class="bg-white p-4 rounded shadow space-y-2">
+                <!-- Los usuarios se cargarán aqui -->
+            </ul>
+        </section>
+        <section>
+            <h2 class="text-lg font-bold mb-2">Usuarios Guardados</h2>
+            <ul id="usuariosGuardados" class="bg-white p-4 rounded shadow space-y-2">
+                <!-- Los usuarios guardados aparecerán aqui -->
+            </ul>
+        </section>
+    </div>
+
+    <script>
+        // Función para inicializar el temporizador de sesión
+        function iniciarTemporizador() {
+            let tiempoEnPagina = parseInt(sessionStorage.getItem("tiempoEnPagina")) || 0;
+            const elementoTemporizador = document.getElementById("temporizador");
+
+            setInterval(() => {
+                tiempoEnPagina += 1;
+                sessionStorage.setItem("tiempoEnPagina", tiempoEnPagina);
+                elementoTemporizador.textContent = `Tiempo en la página: ${tiempoEnPagina} segundos`;
+            }, 1000);
+        }
+
+        // Función para obtener usuarios desde la API
+        async function obtenerUsuarios() {
+            try {
+                const respuesta = await fetch("https://jsonplaceholder.typicode.com/users");
+                if (!respuesta.ok) throw new Error("Error al obtener usuarios.");
+                return await respuesta.json();
+            } catch (error) {
+                console.error("Error:", error);
+                return [];
+            }
+        }
+
+        // Función para actualizar la lista de usuarios disponibles en el DOM
+        function actualizarUsuariosDisponibles(usuarios) {
+            const listaUsuariosDisponibles = document.getElementById("usuariosDisponibles");
+            listaUsuariosDisponibles.innerHTML = ""; // Limpiar la lista
+            usuarios.forEach(usuario => {
+                const li = document.createElement("li");
+                li.className = "p-3 border rounded flex justify-between items-center";
+                li.innerHTML = `
+          <div>
+            <h3 class="font-bold">${usuario.name}</h3>
+            <p class="text-sm text-gray-600">${usuario.email}</p>
+          </div>
+          <button data-id="${usuario.id}" class="guardar-usuario bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">
+            Guardar
+          </button>
+        `;
+                listaUsuariosDisponibles.appendChild(li);
+            });
+        }
+
+        // Función para actualizar la lista de usuarios guardados en el DOM
+        function actualizarUsuariosGuardados(usuariosGuardados) {
+            const listaUsuariosGuardados = document.getElementById("usuariosGuardados");
+            listaUsuariosGuardados.innerHTML = ""; // Limpiar la lista
+            usuariosGuardados.forEach(usuario => {
+                const li = document.createElement("li");
+                li.className = "p-3 border rounded flex justify-between items-center";
+                li.innerHTML = `
+          <div>
+            <h3 class="font-bold">${usuario.name}</h3>
+            <p class="text-sm text-gray-600">${usuario.email}</p>
+          </div>
+          <button data-id="${usuario.id}" class="eliminar-usuario bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">
+            Eliminar
+          </button>
+        `;
+                listaUsuariosGuardados.appendChild(li);
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            // Inicializar temporizador
+            iniciarTemporizador();
+
+            // Cargar usuarios disponibles desde la API
+            const usuarios = await obtenerUsuarios();
+            actualizarUsuariosDisponibles(usuarios);
+
+            // Cargar usuarios guardados desde localStorage
+            const usuariosGuardados = JSON.parse(localStorage.getItem("usuariosGuardados")) || [];
+            actualizarUsuariosGuardados(usuariosGuardados);
+
+            // Evento para guardar usuarios
+            document.getElementById("usuariosDisponibles").addEventListener("click", (e) => {
+                if (e.target.classList.contains("guardar-usuario")) {
+                    const idUsuario = parseInt(e.target.dataset.id);
+                    const usuario = usuarios.find(u => u.id === idUsuario);
+
+                    if (!usuariosGuardados.find(u => u.id === idUsuario)) {
+                        usuariosGuardados.push(usuario);
+                        localStorage.setItem("usuariosGuardados", JSON.stringify(usuariosGuardados));
+                        actualizarUsuariosGuardados(usuariosGuardados);
+                    }
+                }
+            });
+
+            // Evento para eliminar usuarios guardados
+            document.getElementById("usuariosGuardados").addEventListener("click", (e) => {
+                if (e.target.classList.contains("eliminar-usuario")) {
+                    const idUsuario = parseInt(e.target.dataset.id);
+                    const indice = usuariosGuardados.findIndex(u => u.id === idUsuario);
+                    if (indice !== -1) {
+                        usuariosGuardados.splice(indice, 1);
+                        localStorage.setItem("usuariosGuardados", JSON.stringify(usuariosGuardados));
+                        actualizarUsuariosGuardados(usuariosGuardados);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

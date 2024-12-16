@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Gestor de Eventos</title>
+</head>
+<body class="bg-gray-100 p-6">
+
+  <div class="max-w-4xl mx-auto">
+    <!-- Título -->
+    <h1 class="text-2xl font-bold mb-4 text-center">Gestor de Eventos</h1>
+
+    <!-- Formulario de Eventos -->
+    <form id="formularioEvento" class="bg-white p-4 rounded shadow mb-6">
+      <div class="mb-2">
+        <label for="nombreEvento" class="block text-sm font-medium">Nombre del Evento</label>
+        <input type="text" id="nombreEvento" class="w-full border border-gray-300 p-2 rounded" placeholder="Escribe el nombre del evento..." required>
+      </div>
+      <div class="mb-2">
+        <label for="fechaEvento" class="block text-sm font-medium">Fecha del Evento</label>
+        <input type="date" id="fechaEvento" class="w-full border border-gray-300 p-2 rounded" required>
+      </div>
+      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Agregar Evento</button>
+    </form>
+
+    <!-- Filtro de Eventos -->
+    <form id="filtroFechas" class="bg-white p-4 rounded shadow mb-6">
+      <h2 class="text-lg font-bold mb-2">Filtrar Eventos por Rango de Fechas</h2>
+      <div class="mb-2">
+        <label for="fechaInicio" class="block text-sm font-medium">Fecha Inicio</label>
+        <input type="date" id="fechaInicio" class="w-full border border-gray-300 p-2 rounded">
+      </div>
+      <div class="mb-2">
+        <label for="fechaFin" class="block text-sm font-medium">Fecha Fin</label>
+        <input type="date" id="fechaFin" class="w-full border border-gray-300 p-2 rounded">
+      </div>
+      <button type="submit" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Aplicar Filtro</button>
+    </form>
+
+    <!-- Sección de Eventos de Hoy -->
+    <section class="mb-6">
+      <h2 class="text-lg font-bold mb-2">Eventos de Hoy</h2>
+      <ul id="eventosHoy" class="bg-white p-4 rounded shadow space-y-2">
+        <!-- Eventos de hoy aparecerán aquí -->
+      </ul>
+    </section>
+
+    <!-- Sección de Eventos Futuros -->
+    <section class="mb-6">
+      <h2 class="text-lg font-bold mb-2">Eventos Futuros</h2>
+      <ul id="eventosFuturos" class="bg-white p-4 rounded shadow space-y-2">
+        <!-- Eventos futuros aparecerán aquí -->
+      </ul>
+    </section>
+
+    <!-- Sección de Eventos Pasados -->
+    <section>
+      <h2 class="text-lg font-bold mb-2">Eventos Pasados</h2>
+      <ul id="eventosPasados" class="bg-white p-4 rounded shadow space-y-2">
+        <!-- Eventos pasados aparecerán aquí -->
+      </ul>
+    </section>
+  </div>
+
+  <script>
+    // Función para calcular la diferencia de días entre dos fechas
+    function calcularDiferenciaDias(fecha) {
+      const fechaEvento = new Date(fecha);
+      const hoy = new Date();
+      const diferenciaTiempo = fechaEvento - hoy;
+      const diferenciaDias = Math.ceil(diferenciaTiempo / (1000 * 60 * 60 * 24));
+      return diferenciaDias;
+    }
+
+    // Función para clasificar eventos
+    function clasificarEventos(eventos) {
+      const hoy = new Date().toISOString().split("T")[0]; // Fecha actual en formato "YYYY-MM-DD"
+      const eventosHoy = eventos.filter(evento => evento.fecha === hoy);
+      const eventosFuturos = eventos.filter(evento => calcularDiferenciaDias(evento.fecha) > 0);
+      const eventosPasados = eventos.filter(evento => calcularDiferenciaDias(evento.fecha) < 0);
+
+      // Ordenar eventos por fecha
+      eventosFuturos.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+      eventosPasados.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+      return { eventosHoy, eventosFuturos, eventosPasados };
+    }
+
+    // Función para actualizar el DOM
+    function actualizarListas(eventos) {
+      const { eventosHoy, eventosFuturos, eventosPasados } = clasificarEventos(eventos);
+
+      const listaEventosHoy = document.getElementById("eventosHoy");
+      const listaEventosFuturos = document.getElementById("eventosFuturos");
+      const listaEventosPasados = document.getElementById("eventosPasados");
+
+      listaEventosHoy.innerHTML = "";
+      listaEventosFuturos.innerHTML = "";
+      listaEventosPasados.innerHTML = "";
+
+      // Actualizar eventos de hoy
+      eventosHoy.forEach(evento => agregarEventoAlDom(evento, listaEventosHoy, "bg-yellow-100"));
+
+      // Actualizar eventos futuros
+      eventosFuturos.forEach(evento => agregarEventoAlDom(evento, listaEventosFuturos, "bg-green-100"));
+
+      // Actualizar eventos pasados
+      eventosPasados.forEach(evento => agregarEventoAlDom(evento, listaEventosPasados, "bg-red-100"));
+    }
+
+    // Función para agregar un evento al DOM
+    function agregarEventoAlDom(evento, lista, claseColor) {
+      const li = document.createElement("li");
+      li.className = `p-3 border rounded flex justify-between items-center ${claseColor}`;
+      li.innerHTML = `
+        <div>
+          <h3 class="font-bold">${evento.nombre}</h3>
+          <p class="text-sm text-gray-600">Fecha: ${evento.fecha}</p>
+        </div>
+        <button data-id="${evento.id}" class="eliminar-evento bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">Eliminar</button>
+      `;
+      lista.appendChild(li);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const eventos = JSON.parse(localStorage.getItem("eventos")) || [];
+
+      // Actualizar el DOM con los eventos iniciales
+      actualizarListas(eventos);
+
+      // Agregar evento nuevo
+      document.getElementById("formularioEvento").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const nombreEvento = document.getElementById("nombreEvento").value;
+        const fechaEvento = document.getElementById("fechaEvento").value;
+
+        if (!fechaEvento) {
+          alert("Por favor, selecciona una fecha válida.");
+          return;
+        }
+
+        const nuevoEvento = { id: Date.now(), nombre: nombreEvento, fecha: fechaEvento };
+        eventos.push(nuevoEvento);
+        localStorage.setItem("eventos", JSON.stringify(eventos));
+
+        actualizarListas(eventos);
+        e.target.reset();
+      });
+
+      // Eliminar evento
+      document.addEventListener("click", (e) => {
+        if (e.target.classList.contains("eliminar-evento")) {
+          const idEvento = parseInt(e.target.dataset.id);
+          const indice = eventos.findIndex(evento => evento.id === idEvento);
+          if (indice !== -1) {
+            eventos.splice(indice, 1);
+            localStorage.setItem("eventos", JSON.stringify(eventos));
+            actualizarListas(eventos);
+          }
+        }
+      });
+
+      // Filtro por rango de fechas
+      document.getElementById("filtroFechas").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const fechaInicio = new Date(document.getElementById("fechaInicio").value);
+        const fechaFin = new Date(document.getElementById("fechaFin").value);
+
+        if (fechaInicio && fechaFin) {
+          const eventosFiltrados = eventos.filter(evento => {
+            const fechaEvento = new Date(evento.fecha);
+            return fechaEvento >= fechaInicio && fechaEvento <= fechaFin;
+          });
+          actualizarListas(eventosFiltrados);
+        } else {
+          alert("Por favor selecciona un rango de fechas válido.");
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<script>
+
+    let a = Number(prompt("ingrese el valor de a"))
+    let b = Number(prompt("ingrese el valor de a"))
+    let c = Number(prompt("ingrese el valor de a"))
+    let raiz =  b**2-4*a*c
+    let  denominador =  2*a
+
+    if (raiz > 0 && denominador != 0) {
+       let  x1 = (-b + Math.sqrt(raiz))/denominador
+       let  x2 = (-b - Math.sqrt(raiz))/denominador
+      console.log(x1)
+      console.log(x2)
+    }
+
+    else{
+        console.log(" valores incorrectos")
+    }
+
+</script>
+<body>
+    
+</body>
+</html>

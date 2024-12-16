@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        
+</head>
+
+<body>
+    <header>
+        <h1>Mostrar inventario</h1>
+    </header>
+    
+    <section>
+        <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Precio</th>
+              </tr>
+            </thead>
+
+            <tbody id="mostrarFilas">
+              
+            
+            </tbody>
+          </table>
+        
+    </section>
+     
+    <section>
+        <div class="btn-group" role="group" aria-label="Basic outlined example">
+            <button type="button" class="btn btn-outline-primary" id="btnInsertar">Insertar</button>
+            <button type="button" class="btn btn-outline-primary">buscar</button>
+            <button type="button" class="btn btn-outline-primary">Eliminar</button>
+        </div>
+    </section>
+
+
+</body>
+<script src="admi-inven.js"></script>
+</html>

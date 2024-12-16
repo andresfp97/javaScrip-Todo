@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio en Clase</title>
+</head>
+
+<body>
+
+
+</body>
+<script>
+
+function calcular(ms, mensaje) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            const ahora = new Date();
+            const hora = ahora.getHours();
+            const minutos = ahora.getMinutes();
+            const segundos = ahora.getSeconds();
+            resolve(console.log(`${mensaje} apareció en ${hora}:${minutos}:${segundos}`));
+        }, ms);
+    });
+}
+
+function mostrar1() {
+    let tiempo = 0;
+    calcular(tiempo, "A [Enviado de Primero]")
+        .then(() => calcular(tiempo += 0, "B [Enviado de Segundo]"))
+        .then(() => calcular(tiempo += 5000, "C [Enviado de Tercero]"))
+        .catch((error) => console.error("Error en la ejecución:", error));
+}
+
+function mostrar2() {
+    let tiempo =Math.random()* (5000 - 2000)+ 2000
+    calcular(tiempo, "D [Enviado de Cuarto]")
+        .then(() => calcular(tiempo += 2000, "E [Enviado de Quinto]"))
+        .then(() => calcular(tiempo += 2000, "G [Enviado de Septimo]"))
+        .then(() => calcular(tiempo += 3000, "H [Enviado de Septimo]"))
+        .catch((error) => console.error("Error en la ejecución:", error));
+}
+
+function mostrar3() {
+    let tiempo = 0
+    calcular(tiempo += 7000, "F [Enviado de Sexto]")
+        .catch((error) => console.error("Error en la ejecución:", error));
+}
+
+mostrar1();
+mostrar2();
+mostrar3();
+</script>
+
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script>
+        let fecha = prompt("ingresar fecha  en formaro DD/MM/AAAA")
+        let fecha1 = fecha.split("/")
+
+        if(fecha1[0] > 0  &&  fecha1[0] < 10 ){
+            fecha1[0] = "0"+fecha1[0]
+        }
+
+        if(fecha1[1] > 0  &&  fecha1[1] < 10 ){
+            fecha1[1] = "0"+fecha1[1]
+        }
+        
+        if ( fecha[0] > 0 && fecha1[0] <= 31 && fecha1[1]>0 && fecha1[1] <= 12 && fecha1[2] >= 1000 && fecha1[2] <= 9999) {
+            console.log("La fecha es valida", fecha1[0], "/" ,fecha1[1],"/" ,fecha1[2])
+        }
+        else {
+            console.log("fecha no valida")
+        }
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

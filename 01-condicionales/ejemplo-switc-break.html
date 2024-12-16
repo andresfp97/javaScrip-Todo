@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        /* 
+        if (pais === "Colombia") {
+            alert("su gentilicio es colombiano")
+        }
+        else if (pais === "Venezuela") {
+            alert("su gentilicio es venezolano")
+        } 
+        else {
+            alert("no eres latino")
+        } 
+            */
+
+        /*
+        let pais = prompt("En que pais nacio");
+        let msg = "n/"
+
+        if(edad >17){
+            msg+="eres mayor de edad"
+        }
+        else{
+            msg+= "eres menor de edad"
+        }
+
+        */
+         let pais = prompt("En que pais nacio");
+         let msg = "\n" + ((edad > 17) ? "Eres mayor de edad ": "eres menor de edad");
+
+        switch (pais) {
+            case "Colombia":
+                alert("su gentilicio es colombiano", msg)
+                break
+            case "Venezuela":
+                alert("su gentilicio es Venezolano", msg)
+                break
+            case "Colombia":
+                alert("su gentilicio es ecuatoriano", msg)
+            case "argentino":
+                alert("su gentilicio es argentino",msg)
+                break
+            default:
+                alert("no eres latino")
+        }
+    </script>
+</body>
+
+</html>
